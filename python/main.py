@@ -2,6 +2,14 @@ import pyodbc
 import flask
 from flask_cors import CORS
 import uuid
+
+from . import category
+from . import product
+from . import supplier
+from . import purchase_order
+from . import purchase_order_detail
+from . import product_variant
+
 con_str = (
     "Driver={SQL Server};"
     "Server=localhost\\SQLEXPRESS;"
@@ -421,4 +429,11 @@ def top_products():
 
 
 if __name__ == "__main__":
+    app.register_blueprint(category.bp)
+    app.register_blueprint(product.bp)
+    app.register_blueprint(product_variant.bp)
+    app.register_blueprint(supplier.bp)
+    app.register_blueprint(purchase_order.bp)
+    app.register_blueprint(purchase_order_detail.bp)
+
     app.run(host="127.0.0.1", port=5000, debug=True)
