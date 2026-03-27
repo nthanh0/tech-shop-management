@@ -3,16 +3,40 @@
   "WorkspaceRootPath": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\views\\shared\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:views\\shared\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\views\\shared\\_topbaradmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:views\\shared\\_topbaradmin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\views\\shared\\_layout_admin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:views\\shared\\_layout_admin.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\areas\\admin\\views\\bill\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:areas\\admin\\views\\bill\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\views\\login\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:views\\login\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\views\\login\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:views\\login\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\btl_api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:btl_api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -29,10 +53,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\views\\product\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:views\\product\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\views\\shared\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|solutionrelative:views\\shared\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{387D88F6-8234-41E6-86EE-C8CD177B37F2}|BTL_API.csproj|c:\\users\\duck\\downloads\\btl_api-20260324t135218z-1-001\\btl_api\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
@@ -54,7 +74,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -79,32 +99,120 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "LoginController.cs",
-              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Controllers\\LoginController.cs",
-              "RelativeDocumentMoniker": "Controllers\\LoginController.cs",
-              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Controllers\\LoginController.cs",
-              "RelativeToolTip": "Controllers\\LoginController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-27T08:56:05.263Z",
+              "Title": "_TopbarAdmin.cshtml",
+              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_TopbarAdmin.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_TopbarAdmin.cshtml",
+              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_TopbarAdmin.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_TopbarAdmin.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-27T11:58:45.795Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
+              "Title": "_Layout_Admin.cshtml",
+              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Layout_Admin.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout_Admin.cshtml",
+              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Layout_Admin.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout_Admin.cshtml",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABkAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-27T11:55:51.766Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Areas\\Admin\\Views\\Bill\\Index.cshtml",
+              "RelativeDocumentMoniker": "Areas\\Admin\\Views\\Bill\\Index.cshtml",
+              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Areas\\Admin\\Views\\Bill\\Index.cshtml",
+              "RelativeToolTip": "Areas\\Admin\\Views\\Bill\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-27T11:55:38.3Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Register.cshtml",
+              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Login\\Register.cshtml",
+              "RelativeDocumentMoniker": "Views\\Login\\Register.cshtml",
+              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Login\\Register.cshtml",
+              "RelativeToolTip": "Views\\Login\\Register.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-27T09:52:37.212Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Login\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Login\\Index.cshtml",
-              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Login\\Index.cshtml*",
-              "RelativeToolTip": "Views\\Login\\Index.cshtml*",
-              "ViewState": "AgIAACgAAAAAAAAAAAAAAGIAAAAHAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Login\\Index.cshtml",
+              "RelativeToolTip": "Views\\Login\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2026-03-27T08:55:54.816Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
+              "Title": "_Header.cshtml",
+              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Header.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Header.cshtml",
+              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Header.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Header.cshtml",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAwwGAAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-24T13:53:37.54Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAADQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-03-24T13:53:37.547Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LoginController.cs",
+              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "Controllers\\LoginController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-27T08:56:05.263Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "BTL_API",
+              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\BTL_API.csproj",
+              "RelativeDocumentMoniker": "BTL_API.csproj",
+              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\BTL_API.csproj",
+              "RelativeToolTip": "BTL_API.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-03-27T09:43:27.245Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "_ViewImports.cshtml",
               "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\_ViewImports.cshtml",
               "RelativeDocumentMoniker": "Views\\_ViewImports.cshtml",
@@ -116,7 +224,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Product\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Product\\Index.cshtml",
@@ -128,7 +236,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 11,
               "Title": "_ViewStart.cshtml",
               "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\_ViewStart.cshtml",
               "RelativeDocumentMoniker": "Views\\_ViewStart.cshtml",
@@ -140,19 +248,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "_Header.cshtml",
-              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Header.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_Header.cshtml",
-              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Header.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_Header.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-24T13:53:37.54Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 15,
               "Title": "_Footer.cshtml",
               "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Footer.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_Footer.cshtml",
@@ -164,20 +260,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA4AAABvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-03-24T13:53:37.547Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
@@ -189,7 +272,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 14,
               "Title": "Error.cshtml",
               "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\Views\\Shared\\Error.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\Error.cshtml",
@@ -201,7 +284,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 13,
               "Title": "site.css",
               "DocumentMoniker": "C:\\Users\\Duck\\Downloads\\BTL_API-20260324T135218Z-1-001\\BTL_API\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\site.css",

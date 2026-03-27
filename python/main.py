@@ -5,10 +5,9 @@ import uuid
 
 con_str = (
         "DRIVER={SQL Server};"
-        "SERVER=localhost,1433;"
+        "SERVER=localhost\\SQLEXPRESS;"
         "DATABASE=DuLieu;"
-        "UID=sa;"
-        "PWD=dung0;"
+        "Trusted_Connection=yes;"
     )
 conn = pyodbc.connect(con_str)
 app = flask.Flask(__name__)
