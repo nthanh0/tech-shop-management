@@ -193,3 +193,5 @@ C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\obj\Debug\net9.0\
 C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\obj\Debug\net9.0\BTL_API.pdb
 C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\obj\Debug\net9.0\BTL_API.genruntimeconfig.cache
 C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\obj\Debug\net9.0\ref\BTL_API.dll
+C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\obj\Debug\net9.0\BTL_API.sourcelink.json
+C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\obj\Debug\net9.0\compressed\c318bbvdqk-{0}-vrli34flhn-vrli34flhn.gz

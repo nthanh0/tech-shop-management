@@ -1,3 +1,4 @@
+wwwroot\css\admin-style.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\js\site.js
@@ -123,3 +124,4 @@ C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\wwwroot\lib\jquer
 C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\wwwroot\lib\jquery\dist\jquery.slim.min.js
 C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\wwwroot\lib\jquery\dist\jquery.slim.min.map
 C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\wwwroot\lib\jquery\LICENSE.txt
+C:\Users\Duck\Downloads\BTL_API-20260324T135218Z-1-001\BTL_API\wwwroot\css\admin-style.css
