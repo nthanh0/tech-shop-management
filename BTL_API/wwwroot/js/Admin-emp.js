@@ -1,46 +1,76 @@
-﻿// Chờ giao diện load xong thì mới gọi API
+﻿
+
+// ==========================================
+// 1. CÁC BIẾN TOÀN CỤC CHO PHÂN TRANG (QUAN TRỌNG)
+// ==========================================
+let currentData = []; // Mảng nhớ tạm dữ liệu
+let currentPage = 1;  // Trang hiện hành
+const rowsPerPage = 5; // Số nhân viên hiển thị trên 1 trang
+
 document.addEventListener("DOMContentLoaded", function () {
     executeSearch();
 });
 
+// ==========================================
+// 2. HÀM TÌM KIẾM
+// ==========================================
 function executeSearch() {
     let keyword = document.getElementById('searchInput').value;
     let roleFilter = document.getElementById('filterRole').value;
 
-    // CHỤP X-QUANG 1: Xem JS có lấy đúng chữ mày gõ không?
-    console.log("1. Chữ đang tìm:", keyword, "| Chức vụ lọc:", roleFilter);
-
     fetch('http://127.0.0.1:5000/employees/search?keyword=' + keyword, {
         method: 'POST'
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                // NẾU PYTHON LỖI 400/500, DỊCH LỖI ĐỂ TRUYỀN XUỐNG CATCH
+                return response.json().then(err => { throw new Error(err.error || "Lỗi Server Python") });
+            }
+            return response.json();
+        })
         .then(data => {
-            // CHỤP X-QUANG 2: Xem Python trả về cái mảng có bao nhiêu người?
-            console.log("2. Data từ Python gửi về:", data);
-
-            if (roleFilter !== "All") {
-                data = data.filter(emp => emp.Role === roleFilter);
-                // CHỤP X-QUANG 3: Xem lọc xong còn mấy người?
-                console.log("3. Data sau khi lọc chức vụ:", data);
+            // ĐẢM BẢO DATA LÀ MẢNG THÌ MỚI XỬ LÝ
+            if (Array.isArray(data)) {
+                if (roleFilter !== "All") {
+                    data = data.filter(emp => emp.Role === roleFilter);
+                }
+                currentData = data;
+            } else {
+                currentData = []; 
             }
 
-            renderTable(data);
+            currentPage = 1;
+            renderTable();
         })
-        .catch(error => console.error('Lỗi khi tìm kiếm:', error));
+        .catch(error => {
+            console.error('Lỗi khi tìm kiếm:', error);
+            currentData = []; // Tránh lỗi slice()
+            const tableBody = document.getElementById('employeeTableBody');
+            tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4"><b>Lỗi Backend:</b> ${error.message}</td></tr>`;
+            document.querySelector('.pagination').innerHTML = '';
+        });
 }
 
-// 3. Hàm chuyên làm nhiệm vụ vẽ HTML (Tách ra dùng chung cho sạch code)
-function renderTable(data) {
+// ==========================================
+// 3. HÀM VẼ BẢNG (ĐÃ TÍCH HỢP CẮT MẢNG)
+// ==========================================
+function renderTable() {
     const tableBody = document.getElementById('employeeTableBody');
     let htmlContent = '';
 
-    // Nếu tìm không thấy ai thì báo lỗi cho thân thiện
-    if (!data || data.length === 0) {
+    if (!currentData || currentData.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-4"><i>Không tìm thấy nhân viên nào phù hợp với bộ lọc.</i></td></tr>`;
+        document.querySelector('.pagination').innerHTML = ''; // Giấu luôn nút phân trang nếu ko có ai
         return;
     }
 
-    data.forEach(emp => {
+    // THUẬT TOÁN CẮT MẢNG (Chỉ lấy 5 ông)
+    let startIndex = (currentPage - 1) * rowsPerPage;
+    let endIndex = startIndex + rowsPerPage;
+    let paginatedData = currentData.slice(startIndex, endIndex);
+
+    // Dùng mảng đã cắt để vẽ
+    paginatedData.forEach(emp => {
         let firstLetter = emp.FullName ? emp.FullName.charAt(0).toUpperCase() : '?';
         let badgeClass = 'bg-secondary';
         let role = emp.Role;
@@ -76,6 +106,47 @@ function renderTable(data) {
     });
 
     tableBody.innerHTML = htmlContent;
+
+    // VẼ THÊM CÁC NÚT BẤM DƯỚI ĐÁY BẢNG
+    renderPagination();
+}
+
+// ==========================================
+// 4. HÀM VẼ NÚT PHÂN TRANG (1, 2, 3...)
+// ==========================================
+function renderPagination() {
+    let totalPages = Math.ceil(currentData.length / rowsPerPage);
+    let paginationUl = document.querySelector('.pagination');
+    let html = '';
+
+    // Nút "Trước"
+    let prevDisabled = (currentPage === 1) ? 'disabled' : '';
+    html += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" onclick="changePage(event, ${currentPage - 1})">Trước</a></li>`;
+
+    // Nút số 1, 2, 3
+    for (let i = 1; i <= totalPages; i++) {
+        let activeClass = (i === currentPage) ? 'active' : '';
+        let style = (i === currentPage) ? 'style="background-color: #1b45cf; border-color: #1b45cf; color: white;"' : '';
+        html += `<li class="page-item ${activeClass}"><a class="page-link" href="#" ${style} onclick="changePage(event, ${i})">${i}</a></li>`;
+    }
+
+    // Nút "Sau"
+    let nextDisabled = (currentPage === totalPages || totalPages === 0) ? 'disabled' : '';
+    html += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" onclick="changePage(event, ${currentPage + 1})">Sau</a></li>`;
+
+    paginationUl.innerHTML = html;
+}
+
+// ==========================================
+// 5. HÀM CHUYỂN TRANG
+// ==========================================
+function changePage(event, newPage) {
+    event.preventDefault(); // Ngăn web bị giật lên đầu trang
+    let totalPages = Math.ceil(currentData.length / rowsPerPage);
+    if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        renderTable();
+    }
 }
 function saveNewEmployee() {
     // 1. Lấy dữ liệu từ các ô input mà người dùng vừa gõ
@@ -119,7 +190,7 @@ function saveNewEmployee() {
                 modal.hide();
 
                 // QUAN TRỌNG: Gọi lại hàm load bảng để nó hiển thị ngay nhân viên mới
-                loadEmployees();
+                executeSearch();
             }
             // Nếu Python báo lỗi (Trùng Username, SĐT... - Status 400 hoặc 500)
             else {
@@ -149,7 +220,7 @@ function deleteEmployee(id) {
             if (result.status === 200) {
                 alert("Đã tiễn nhân viên lên đường thành công!");
 
-                loadEmployees();
+                executeSearch();
             }
             
             else {
@@ -221,7 +292,7 @@ function submitEditEmployee() {
                 modal.hide();
 
                 // Load lại bảng để thấy chữ mới vừa sửa
-                loadEmployees();
+                executeSearch();
             } else {
                 alert("Lỗi khi cập nhật: " + (result.body.mess || result.body.error));
             }

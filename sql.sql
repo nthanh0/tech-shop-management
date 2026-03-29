@@ -3,7 +3,7 @@
 -- =========================================================================
 -- 0. XÓA BẢNG CŨ (Phải xóa bảng con trước, bảng cha sau để không lỗi khóa ngoại)
 -- =========================================================================
-
+use ShopManagement
 DROP TABLE IF EXISTS BillDetail;
 DROP TABLE IF EXISTS Bill;
 DROP TABLE IF EXISTS PurchaseOrderDetail;
