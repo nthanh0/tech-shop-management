@@ -1,4 +1,4 @@
-﻿USE DuLieu;
+﻿USE ShopManagement;
 
 -- =========================================================================
 -- 0. XÓA BẢNG CŨ (Phải xóa bảng con trước, bảng cha sau để không lỗi khóa ngoại)
@@ -215,3 +215,16 @@ INSERT INTO BillDetail (BillDetailID, BillID, ProductVariantID, Num, Price) VALU
 ('BD03', 'BILL02', 'VAR03', 1, 26000000),
 ('BD04', 'BILL03', 'VAR03', 1, 26000000),
 ('BD05', 'BILL04', 'VAR05', 1, 5500000);
+-- Thêm 10 nhân viên mới cho bảng Employee
+INSERT INTO Employee (EmployeeID, FullName, Phone, Email, Role) VALUES 
+('EMP06', N'Nguyễn Văn Bình', '0956789012', 'binh.nguyen@shop.com', N'Bán hàng'),
+('EMP07', N'Trần Thị Hoa', '0967890123', 'hoa.tran@shop.com', N'Thu ngân'),
+('EMP08', N'Lý Hải Nam', '0978901234', 'nam.ly@shop.com', N'Thủ kho'),
+('EMP09', N'Đặng Minh Tuấn', '0989012345', 'tuan.dang@shop.com', N'Kỹ thuật'),
+('EMP10', N'Bùi Phương Thảo', '0990123456', 'thao.bui@shop.com', N'Chăm sóc khách hàng'),
+('EMP11', N'Vũ Hoàng Long', '0909123456', 'long.vu@shop.com', N'Bán hàng'),
+('EMP12', N'Phạm Bảo Anh', '0919234567', 'anh.pham@shop.com', N'Marketing'),
+('EMP13', N'Đỗ Thùy Chi', '0929345678', 'chi.do@shop.com', N'Kế toán'),
+('EMP14', N'Ngô Tiến Dũng', '0939456789', 'dung.ngo@shop.com', N'Bảo vệ'),
+('EMP15', N'Trương Gia Bình', '0949567890', 'binh.truong@shop.com', N'Quản lý');
+select * from Employee;
