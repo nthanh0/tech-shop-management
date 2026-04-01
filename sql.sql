@@ -1,9 +1,9 @@
-﻿USE ShopManagement;
+﻿USE DuLieu;
 
 -- =========================================================================
 -- 0. XÓA BẢNG CŨ (Phải xóa bảng con trước, bảng cha sau để không lỗi khóa ngoại)
 -- =========================================================================
-use ShopManagement
+
 DROP TABLE IF EXISTS BillDetail;
 DROP TABLE IF EXISTS Bill;
 DROP TABLE IF EXISTS PurchaseOrderDetail;
@@ -24,7 +24,8 @@ GO
 -- Bảng Category (Danh mục)
 CREATE TABLE Category (
     CategoryID VARCHAR(50) PRIMARY KEY,
-    Name NVARCHAR(100) NOT NULL
+    Name NVARCHAR(100) NOT NULL,
+    IsDeleted BIT DEFAULT 0
 );
 
 -- Bảng Supplier (Nhà cung cấp)
@@ -33,7 +34,8 @@ CREATE TABLE Supplier (
     SupplierName NVARCHAR(100) NOT NULL,
     Address NVARCHAR(255),
     Phone VARCHAR(20),
-    Email VARCHAR(100)
+    Email VARCHAR(100),
+    IsDeleted BIT DEFAULT 0
 );
 
 -- Bảng Employee (Nhân viên)
@@ -42,7 +44,8 @@ CREATE TABLE Employee (
     FullName NVARCHAR(100) NOT NULL,
     Phone VARCHAR(20),
     Email VARCHAR(100),
-    Role NVARCHAR(50)
+    Role NVARCHAR(50),
+    IsDeleted BIT DEFAULT 0
 );
 
 -- Bảng Customer (Khách hàng)
@@ -51,7 +54,8 @@ CREATE TABLE Customer (
     FullName NVARCHAR(100) NOT NULL,
     Phone VARCHAR(20) UNIQUE,
     Email VARCHAR(100),
-    Address NVARCHAR(255)
+    Address NVARCHAR(255),
+    IsDeleted BIT DEFAULT 0
 );
 
 -- Bảng Account (Tài khoản) - Đã liên kết với Employee và Customer
@@ -62,7 +66,8 @@ CREATE TABLE Account (
     Role VARCHAR(50),
     IsActive BIT DEFAULT 1,
     EmployeeID VARCHAR(50) FOREIGN KEY REFERENCES Employee(EmployeeID) NULL,
-    CustomerID VARCHAR(50) FOREIGN KEY REFERENCES Customer(CustomerID) NULL
+    CustomerID VARCHAR(50) FOREIGN KEY REFERENCES Customer(CustomerID) NULL,
+    IsDeleted BIT DEFAULT 0
 );
 
 -- Bảng Product (Sản phẩm) - ĐÃ XÓA DESCRIPTION
@@ -73,7 +78,8 @@ CREATE TABLE Product (
     Image VARCHAR(255),
     Information NVARCHAR(MAX), 
     Status VARCHAR(50),
-    CategoryID VARCHAR(50) FOREIGN KEY REFERENCES Category(CategoryID)
+    CategoryID VARCHAR(50) FOREIGN KEY REFERENCES Category(CategoryID),
+    IsDeleted BIT DEFAULT 0
 );
 
 -- Bảng ProductVariant (Biến thể sản phẩm)
@@ -83,7 +89,8 @@ CREATE TABLE ProductVariant (
     Color NVARCHAR(50),
     SellingPrice DECIMAL(18,2) NOT NULL,
     StockQuantity INT DEFAULT 0,
-    Description NVARCHAR(MAX) 
+    Description NVARCHAR(MAX) ,
+    IsDeleted BIT DEFAULT 0
 );
 
 -- Bảng PurchaseOrder (Phiếu nhập hàng)
