@@ -68,16 +68,16 @@ def update_product(ID):
     try:
         ProductName = flask.request.json.get("ProductName")
         Brand = flask.request.json.get("Brand")
-        Description = flask.request.json.get("Description")
         Image = flask.request.json.get("Image")
+        CategoryID = flask.request.json.get("CategoryID")
         Information = flask.request.json.get("Information")
         Status = flask.request.json.get("Status")
         query = """
                 UPDATE Product SET ProductName = ?, Brand = ?, Image = ?,
-                Information = ?, Status = ?
+                Information = ?, Status = ?, CategoryID = ?
                 WHERE ProductID = ?
                 """
-        cursor.execute(query, (ProductName, Brand, Image, Information, Status, ID))
+        cursor.execute(query, (ProductName, Brand, Image, Information, Status, CategoryID, ID))
         conn.commit()
         
         return flask.jsonify({"message": "Success!"}), 200
@@ -116,6 +116,7 @@ def get_product_variant(ID):
             return flask.jsonify({"message":"Can't find this product variant!"}), 404
     except Exception as e:
         return flask.jsonify({"error": str(e)}), 500
+    
 @product_bp.route('/search', methods=['POST'])
 def search_products():
     try:
