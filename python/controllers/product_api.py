@@ -1,12 +1,13 @@
 import flask
 import uuid
-from db_config import conn, get_json_results
+from db_config import get_connection, get_json_results
 
 product_bp = flask.Blueprint('product_bp', __name__)
 
 @product_bp.route('/getall', methods=['GET'])
 def get_all_product():
-    cursor = conn.cursor()
+    db_conn = get_connection()
+    cursor = db_conn.cursor()
     try:
         cursor.execute("SELECT * FROM Product")
         products = get_json_results(cursor)
@@ -35,7 +36,8 @@ def get_all_product():
 
 @product_bp.route('/<ID>', methods=['GET'])
 def get_product_by_id(ID):
-    cursor = conn.cursor()
+    db_conn = get_connection()
+    cursor = db_conn.cursor()
     try:
         cursor.execute("SELECT * FROM Product WHERE ProductID = ?", (ID,))
         products = get_json_results(cursor)
@@ -64,7 +66,8 @@ def get_product_by_id(ID):
 
 @product_bp.route('/add', methods=['POST'])
 def add_product():
-    cursor = conn.cursor()
+    db_conn = get_connection()
+    cursor = db_conn.cursor()
     try:
         ProductID = "PROD_" + str(uuid.uuid4())[:4] 
         
@@ -95,7 +98,7 @@ def add_product():
                 """
         
         cursor.execute(query, (ProductID, ProductName, Brand, Image, Information, CategoryID))
-        conn.commit()    
+        db_conn.commit()
         return flask.jsonify({"message": "Success!"}), 201
     except Exception as e:
         return flask.jsonify({"error": str(e)}), 500
@@ -103,7 +106,8 @@ def add_product():
 
 @product_bp.route('/update/<ID>', methods=['PUT'])
 def update_product(ID):
-    cursor = conn.cursor()
+    db_conn = get_connection()
+    cursor = db_conn.cursor()
     try:
         ProductName = flask.request.json.get("ProductName")
         Brand = flask.request.json.get("Brand")
@@ -131,30 +135,37 @@ def update_product(ID):
                 WHERE ProductID = ?
                 """
         cursor.execute(query, (ProductName, Brand, Image, Information, CategoryID, ID))
-        conn.commit()
+        db_conn.commit()
         
         return flask.jsonify({"message": "Update Success!"}), 200
 
     except Exception as e:
         return flask.jsonify({"error": str(e)}), 500
 
-@product_bp.route('/delete/<ID>', methods=['DELETE'])
+
+@product_bp.route('/delete/<ID>', methods=['PUT', 'DELETE'])
 def delete_product(ID):
-    cursor = conn.cursor()
-    try:       
-        query = "DELETE FROM Productvariant WHERE ProductID = ?"
-        cursor.execute(query, (ID,))
-        query = "DELETE FROM Product WHERE ProductID = ?"
-        cursor.execute(query, (ID,))
-        conn.commit()
-        
+    db_conn = get_connection()
+    cursor = db_conn.cursor()
+    try:
+
+        query_variant = "UPDATE ProductVariant SET IsDeleted = 1 WHERE ProductID = ?"
+        cursor.execute(query_variant, (ID,))
+
+
+        query_prod = "UPDATE Product SET IsDeleted = 1 WHERE ProductID = ?"
+        cursor.execute(query_prod, (ID,))
+
+        db_conn.commit()
         return flask.jsonify({"message": "Success!"}), 200
     except Exception as e:
+        db_conn.rollback()
         return flask.jsonify({"error": str(e)}), 500
     
 @product_bp.route('/<ID>/variants', methods=['GET'])
 def get_product_variant(ID):
-    cursor = conn.cursor()
+    db_conn = get_connection()
+    cursor = db_conn.cursor()
     try:
         query = """
                 SELECT * FROM Productvariant pv 
@@ -209,15 +220,26 @@ def get_product_variant(ID):
         if cursor:
             cursor.close()
         return flask.jsonify({"error": str(e)}), 500
-    
+
+
 @product_bp.route('/search', methods=['POST'])
 def search_products():
     try:
-        keyword = flask.request.args.get('keyword', )
-        cursor = conn.cursor()
-        sql = "select * from Product where ProductName like ? or Brand like ? or Information like ? or Status like ?"
+        keyword = flask.request.args.get('keyword', '')
+        db_conn = get_connection()
+        cursor = db_conn.cursor()
+
+        sql = """
+              SELECT * \
+              FROM Product
+              WHERE ProductID LIKE ?
+                 OR ProductName LIKE ?
+                 OR Brand LIKE ?
+                 OR Information LIKE ? \
+              """
         search_term = f"%{keyword}%"
-        cursor.execute(sql, (search_term, search_term, search_term, search_term,))
+
+        cursor.execute(sql, (search_term, search_term, search_term, search_term))
         return flask.jsonify(get_json_results(cursor)), 200
     except Exception as e:
         return flask.jsonify({'error': str(e)}), 400
