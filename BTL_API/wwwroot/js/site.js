@@ -257,7 +257,48 @@ async function apiPost(path, body) {
     return { status: res.status, data: await res.json() };
 }
 
+// ======================= FEATURED PRODUCTS BANNER =======================
+
+async function loadFeaturedProducts() {
+    const container = document.getElementById('featuredScroll');
+    if (!container) return;
+
+    try {
+        const featured = await apiFetch('/reports/featured-products');
+        if (!Array.isArray(featured) || featured.length === 0) {
+            container.closest('.featured-banner').style.display = 'none';
+            return;
+        }
+
+        container.innerHTML = featured.map(p => {
+            const img = getFirstImage(p.Images) || PLACEHOLDER_IMG;
+            const priceText = p.MinPrice === p.MaxPrice
+                ? formatPrice(p.MinPrice)
+                : formatPrice(p.MinPrice) + ' – ' + formatPrice(p.MaxPrice);
+
+            return `
+            <div class="featured-card" onclick="window.location.href='/Product/Detail?id=${encodeURIComponent(p.ProductID)}'">
+                <div class="featured-card-img">
+                    <img src="${escapeHtml(img)}" alt="${escapeHtml(p.ProductName)}" onerror="this.src='${PLACEHOLDER_IMG}'" loading="lazy">
+                    <span class="featured-badge"><i class="bi bi-fire"></i> ${p.TotalSold} đã bán</span>
+                </div>
+                <div class="featured-card-body">
+                    <div class="featured-card-brand">${escapeHtml(p.Brand || '')}</div>
+                    <div class="featured-card-name">${escapeHtml(p.ProductName)}</div>
+                    <div class="featured-card-price">${priceText}</div>
+                </div>
+            </div>`;
+        }).join('');
+
+    } catch (err) {
+        console.error('Failed to load featured products:', err);
+        container.closest('.featured-banner').style.display = 'none';
+    }
+}
+
 // ======================= PRODUCT LISTING (Home/Index) =======================
+
+let _allCategoryProducts = []; // products filtered by current category
 
 async function loadStorefront() {
     const grid = document.getElementById('productGrid');
@@ -286,16 +327,127 @@ async function loadStorefront() {
                 pillsContainer.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
                 pill.classList.add('active');
                 const cat = pill.dataset.cat;
-                renderProducts(cat === 'all' ? productList : productList.filter(p => p.CategoryID === cat));
+                _allCategoryProducts = cat === 'all' ? productList : productList.filter(p => p.CategoryID === cat);
+                populateBrandFilter(_allCategoryProducts);
+                applyAdvancedFilters();
             });
         }
 
-        renderProducts(productList);
+        _allCategoryProducts = productList;
+        populateBrandFilter(productList);
+        initFilterListeners();
+        applyAdvancedFilters();
 
     } catch (err) {
         console.error(err);
         grid.innerHTML = '<p class="text-muted" style="grid-column:1/-1;text-align:center;padding:3rem">Không thể tải sản phẩm. Vui lòng kiểm tra kết nối.</p>';
     }
+}
+
+function populateBrandFilter(products) {
+    const select = document.getElementById('filterBrand');
+    if (!select) return;
+    const brands = [...new Set((products || []).map(p => p.Brand).filter(Boolean))].sort();
+    const prev = select.value;
+    select.innerHTML = '<option value="all">Tất cả</option>';
+    brands.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b;
+        opt.textContent = b;
+        select.appendChild(opt);
+    });
+    // keep previous selection if still valid
+    if (brands.includes(prev)) select.value = prev;
+    else select.value = 'all';
+}
+
+function initFilterListeners() {
+    const sortEl = document.getElementById('filterSort');
+    const brandEl = document.getElementById('filterBrand');
+    const priceMinEl = document.getElementById('filterPriceMin');
+    const priceMaxEl = document.getElementById('filterPriceMax');
+    const inStockEl = document.getElementById('filterInStock');
+    const resetBtn = document.getElementById('filterResetBtn');
+
+    if (sortEl) sortEl.addEventListener('change', () => applyAdvancedFilters());
+    if (brandEl) brandEl.addEventListener('change', () => applyAdvancedFilters());
+    if (inStockEl) inStockEl.addEventListener('change', () => applyAdvancedFilters());
+
+    let priceTimer;
+    const debouncedFilter = () => { clearTimeout(priceTimer); priceTimer = setTimeout(() => applyAdvancedFilters(), 400); };
+    if (priceMinEl) priceMinEl.addEventListener('input', debouncedFilter);
+    if (priceMaxEl) priceMaxEl.addEventListener('input', debouncedFilter);
+
+    if (resetBtn) resetBtn.addEventListener('click', resetFilters);
+}
+
+function resetFilters() {
+    const sortEl = document.getElementById('filterSort');
+    const brandEl = document.getElementById('filterBrand');
+    const priceMinEl = document.getElementById('filterPriceMin');
+    const priceMaxEl = document.getElementById('filterPriceMax');
+    const inStockEl = document.getElementById('filterInStock');
+    if (sortEl) sortEl.value = 'default';
+    if (brandEl) brandEl.value = 'all';
+    if (priceMinEl) priceMinEl.value = '';
+    if (priceMaxEl) priceMaxEl.value = '';
+    if (inStockEl) inStockEl.checked = false;
+    applyAdvancedFilters();
+}
+
+function applyAdvancedFilters() {
+    let products = [..._allCategoryProducts];
+
+    // Brand filter (dropdown)
+    const selectedBrand = document.getElementById('filterBrand')?.value;
+    if (selectedBrand && selectedBrand !== 'all') {
+        products = products.filter(p => p.Brand === selectedBrand);
+    }
+
+    // Price range
+    const minVal = parseFloat(document.getElementById('filterPriceMin')?.value);
+    const maxVal = parseFloat(document.getElementById('filterPriceMax')?.value);
+    if (!isNaN(minVal) && minVal > 0) {
+        products = products.filter(p => p.maxPrice >= minVal);
+    }
+    if (!isNaN(maxVal) && maxVal > 0) {
+        products = products.filter(p => p.minPrice <= maxVal);
+    }
+
+    // In-stock only
+    if (document.getElementById('filterInStock')?.checked) {
+        products = products.filter(p => p.totalStock > 0);
+    }
+
+    // Sort
+    const sort = document.getElementById('filterSort')?.value || 'default';
+    switch (sort) {
+        case 'price-asc':
+            products.sort((a, b) => a.minPrice - b.minPrice);
+            break;
+        case 'price-desc':
+            products.sort((a, b) => b.maxPrice - a.maxPrice);
+            break;
+        case 'name-asc':
+            products.sort((a, b) => (a.ProductName || '').localeCompare(b.ProductName || '', 'vi'));
+            break;
+        case 'name-desc':
+            products.sort((a, b) => (b.ProductName || '').localeCompare(a.ProductName || '', 'vi'));
+            break;
+    }
+
+    // Update result count
+    const countEl = document.getElementById('filterResultCount');
+    if (countEl) {
+        const total = _allCategoryProducts.length;
+        if (products.length === total) {
+            countEl.textContent = '';
+        } else {
+            countEl.textContent = `Hiển thị ${products.length} / ${total} sản phẩm`;
+        }
+    }
+
+    renderProducts(products);
 }
 
 function renderProducts(products) {
