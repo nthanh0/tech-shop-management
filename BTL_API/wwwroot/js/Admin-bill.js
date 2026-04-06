@@ -81,7 +81,7 @@ function renderBillTable() {
             <td>${customerDisplay}</td>
             <td>${employeeDisplay}</td>
             <td>${orderDate}</td>
-            <td>${bill.PayMethod || 'Tiền mặt'}</td>
+            <td>${bill.PayMethod || 'Cash'}</td>
             <td class="text-danger fw-bold">${(bill.TotalPrice || 0).toLocaleString()}đ</td>
             <td class="text-center">${badge}</td>
             <td class="text-center pe-3">${actionButtons}</td>
@@ -205,7 +205,7 @@ function changeBillPage(e, page) {
 function openAddBillModal() {
     // Reset form
     document.getElementById('addCustomerID').value = '';
-    document.getElementById('addPayMethod').value = 'Tiền mặt';
+    document.getElementById('addPayMethod').value = 'Cash';
     document.getElementById('billDetailArea').innerHTML = '';
     addBillDetailRow(); 
 
