@@ -22,7 +22,6 @@ def get_all_bills():
         cursor.execute(query)
         bills = get_json_results(cursor)
 
-        # Ép kiểu Float cho TotalPrice để tránh lỗi JSON
         for b in bills:
             if b.get('TotalPrice') is not None:
                 b['TotalPrice'] = float(b['TotalPrice'])
@@ -59,7 +58,6 @@ def create_bill():
             if not cursor.fetchone():
                 return flask.jsonify({"mess": f"Lỗi: Khách hàng mang mã '{cus_id}' không tồn tại!"}), 400
 
-            # 2. Bắt lỗi Khóa Ngoại: Kiểm tra Nhân viên có tồn tại không
         if emp_id:
             cursor.execute("SELECT EmployeeID FROM Employee WHERE EmployeeID = ?", (emp_id,))
         sql = "insert into Bill(BillID, CustomerID, EmployeeID, TotalPrice, PayMethod, Status) values (?, ?, ?, ?, ?, ?)"
@@ -75,7 +73,6 @@ def get_bill_details(BillID):
     db_conn = get_connection()
     cursor = db_conn.cursor()
     try:
-        # Truy vấn lấy toàn bộ chi tiết của Hóa đơn được chọn, JOIN thêm tên SP + màu + ảnh
         query = """
             SELECT 
                 bd.*, 

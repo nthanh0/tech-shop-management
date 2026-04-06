@@ -31,7 +31,7 @@ def add_account():
     cursor = db_conn.cursor()
     try:
         data = flask.request.json
-        full_name = data.get('FullName')  # Thêm trường Họ và tên
+        full_name = data.get('FullName')
         username = data.get('Username')
         password = data.get('Password')
         role = data.get('Role', 'Customer')
@@ -69,10 +69,12 @@ def add_account():
         return flask.jsonify({"mess": "Thêm tài khoản và hồ sơ thành công!", "AccountID": account_id}), 201
 
     except Exception as e:
-        db_conn.rollback()  # Xóa các bước trên nếu có lỗi xảy ra
+        db_conn.rollback()
         import traceback
         print(traceback.format_exc())
         return flask.jsonify({"error": str(e)}), 500
+
+
 @account_bp.route('/edit/<id>', methods=['PUT'])
 def edit_account_password(id):
     db_conn = get_connection()
@@ -82,25 +84,34 @@ def edit_account_password(id):
         new_password = data.get('Password')
 
         if not new_password:
-            return flask.jsonify({"mess": "Vui lòng cung cấp mật khẩu mới!"}), 400
+            return flask.jsonify({"mess": "Please provide a new password!"}), 400
 
-        # Kiểm tra tài khoản có tồn tại và chưa bị xóa không
+        cursor.execute("SELECT Password FROM Account WHERE AccountID = ?", (id,))
+        row = cursor.fetchone()
+
+        if not row:
+            return flask.jsonify({"mess": "Account does not exist!"}), 404
+
+        current_password = str(row[0]).strip()
+        new_pwd_check = str(new_password).strip()
+
+        if new_pwd_check == current_password:
+            return flask.jsonify({"mess": "The new password must not be the same as the current password!"}), 400
+
         cursor.execute("SELECT AccountID FROM Account WHERE AccountID = ? AND IsDeleted = 0", (id,))
         if not cursor.fetchone():
-            return flask.jsonify({"mess": "Không tìm thấy tài khoản!"}), 404
+            return flask.jsonify({"mess": "Account not found!"}), 404
 
-        # Chỉ cập nhật duy nhất cột Password
-        cursor.execute("UPDATE Account SET Password = ? WHERE AccountID = ?", (new_password, id))
+        cursor.execute("UPDATE Account SET Password = ? WHERE AccountID = ?", (new_pwd_check, id))
         db_conn.commit()
 
-        return flask.jsonify({"mess": "Cập nhật mật khẩu thành công!"}), 200
+        return flask.jsonify({"mess": "Update account successfully!"}), 200
 
     except Exception as e:
         db_conn.rollback()
         import traceback
         print(traceback.format_exc())
         return flask.jsonify({"error": str(e)}), 500
-
 
 @account_bp.route('/delete/<id>', methods=['PUT', 'DELETE'])
 def delete_account(id):
