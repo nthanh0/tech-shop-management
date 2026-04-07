@@ -50,24 +50,24 @@ function renderBillTable() {
         let badge = '';
         let actionButtons = `<button class="btn btn-sm btn-light text-primary me-1" title="Xem chi tiết" onclick="viewBillDetails('${bill.BillID}', ${bill.TotalPrice})"><i class="fas fa-eye"></i></button>`;
 
-        // UPDATE LOGIC TRẠNG THÁI TẠI ĐÂY
+      
         if (bill.Status === 'Draft') {
-            badge = `<span class="badge bg-warning text-dark">Nháp (Draft)</span>`;
+            badge = `<span class="badge text-bg-secondary">Nháp</span>`;
             actionButtons += `<button class="btn btn-sm btn-light text-primary me-1" title="Chốt đơn & Giao hàng (Trừ kho)" onclick="checkoutBill('${bill.BillID}')"><i class="fas fa-truck"></i></button>`;
             actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Hủy đơn" onclick="cancelBill('${bill.BillID}')"><i class="fas fa-times-circle"></i></button>`;
         }
         else if (bill.Status === 'Shipping') {
-            badge = `<span class="badge bg-info text-dark">Đang giao</span>`;
+            badge = `<span class="badge text-bg-warning">Đang giao</span>`;
             actionButtons += `<button class="btn btn-sm btn-light text-success me-1" title="Xác nhận Hoàn thành" onclick="completeBill('${bill.BillID}')"><i class="fas fa-check-double"></i></button>`;
             actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Hủy đơn & Hoàn kho" onclick="cancelBill('${bill.BillID}')"><i class="fas fa-undo"></i></button>`;
         }
         else if (bill.Status === 'Completed') {
             badge = `<span class="badge bg-success">Hoàn thành</span>`;
-            // Cân nhắc có cho phép hủy khi đã hoàn thành không (nếu có thì giữ nút này)
+    
             actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Hủy đơn & Hoàn kho" onclick="cancelBill('${bill.BillID}')"><i class="fas fa-undo"></i></button>`;
         }
         else if (bill.Status === 'Cancelled') {
-            badge = `<span class="badge bg-secondary">Đã hủy</span>`;
+            badge = `<span class="badge text-bg-danger">Đã hủy</span>`;
         }
 
         let orderDate = bill.DateOrder ? new Date(bill.DateOrder).toLocaleString('vi-VN') : '-';
@@ -220,7 +220,7 @@ function changeBillPage(e, page) {
 // MỞ FORM TẠO ĐƠN HÀNG 
 function openAddBillModal() {
     document.getElementById('addCustomerID').value = '';
-    document.getElementById('addPayMethod').value = 'Tiền mặt';
+    document.getElementById('addPayMethod').value = 'Cash';
     document.getElementById('billDetailArea').innerHTML = '';
     addBillDetailRow();
 
