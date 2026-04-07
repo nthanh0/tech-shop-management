@@ -107,42 +107,98 @@ def get_bill_details(BillID):
         import traceback
         print(traceback.format_exc())
         return flask.jsonify({"error": str(e)}), 500
-@bill_bp.route('/<id>/checkout', methods = ['POST'])
+
+
+@bill_bp.route('/<id>/checkout', methods=['POST'])
 def checkout_bill(id):
     try:
         db_conn = get_connection()
         cursor = db_conn.cursor()
-        cursor.execute("select ProductVariantID, Num from BillDetail where BillID = ?", (id,))
+
+        # Lấy trạng thái hiện tại để tránh checkout 2 lần
+        cursor.execute("SELECT Status FROM Bill WHERE BillID = ?", (id,))
+        current_status = cursor.fetchone()
+        if not current_status or current_status[0] != 'Draft':
+            return flask.jsonify({"mess": "Chỉ có thể chốt đơn từ trạng thái Draft!"}), 400
+
+        # Kiểm tra và trừ tồn kho
+        cursor.execute("SELECT ProductVariantID, Num FROM BillDetail WHERE BillID = ?", (id,))
         details = cursor.fetchall()
 
         for detail in details:
             variant_id = detail[0]
             num_order = detail[1]
-            cursor.execute("select StockQuantity from ProductVariant where ProductVariantID = ?", (variant_id,))
+            cursor.execute("SELECT StockQuantity FROM ProductVariant WHERE ProductVariantID = ?", (variant_id,))
             current_stock = cursor.fetchone()[0]
+
             if current_stock < num_order:
-                return flask.jsonify({"mess": f"Product {variant_id} is out of stock"}), 200
-            cursor.execute("update ProductVariant set StockQuantity = StockQuantity - ? where ProductVariantID = ?", (num_order, variant_id))
-        cursor.execute("update Bill set Status = 'Completed' where BillID = ?", (id,))
+                return flask.jsonify(
+                    {"mess": f"Sản phẩm {variant_id} không đủ số lượng tồn kho (Còn: {current_stock})"}), 400
+
+            cursor.execute("UPDATE ProductVariant SET StockQuantity = StockQuantity - ? WHERE ProductVariantID = ?",
+                           (num_order, variant_id))
+
+        # Chuyển trạng thái sang Đang giao (Shipping)
+        cursor.execute("UPDATE Bill SET Status = 'Shipping' WHERE BillID = ?", (id,))
         db_conn.commit()
-        return flask.jsonify({"mess": "Payment successful, stock has been deducted!"}), 200
+        return flask.jsonify({"mess": "Chốt đơn thành công, hàng đang được giao!"}), 200
+
     except Exception as e:
         db_conn.rollback()
         return flask.jsonify({"error": str(e)}), 500
-@bill_bp.route('/<id>/cancel', methods = ['POST'])
+
+
+@bill_bp.route('/<id>/complete', methods=['POST'])
+def complete_bill(id):
+    try:
+        db_conn = get_connection()
+        cursor = db_conn.cursor()
+
+        cursor.execute("SELECT Status FROM Bill WHERE BillID = ?", (id,))
+        status_row = cursor.fetchone()
+
+        if not status_row:
+            return flask.jsonify({"error": "Không tìm thấy hóa đơn"}), 404
+
+        if status_row[0] != 'Shipping':
+            return flask.jsonify({"mess": "Chỉ có thể hoàn thành đơn đang ở trạng thái 'Đang giao' (Shipping)"}), 400
+
+        cursor.execute("UPDATE Bill SET Status = 'Completed' WHERE BillID = ?", (id,))
+        db_conn.commit()
+        return flask.jsonify({"mess": "Xác nhận đơn hàng đã giao thành công!"}), 200
+
+    except Exception as e:
+        db_conn.rollback()
+        return flask.jsonify({"error": str(e)}), 500
+
+
+@bill_bp.route('/<id>/cancel', methods=['POST'])
 def cancel_bill(id):
     try:
         db_conn = get_connection()
         cursor = db_conn.cursor()
-        cursor.execute("select Status from Bill where BillID = ?", (id,))
-        status = cursor.fetchone()[0]
-        if status == 'Completed':
-            cursor.execute("select ProductVariantID, Num from BillDetail where BillID = ?", (id,))
+
+        cursor.execute("SELECT Status FROM Bill WHERE BillID = ?", (id,))
+        status_row = cursor.fetchone()
+
+        if not status_row:
+            return flask.jsonify({"error": "Không tìm thấy hóa đơn"}), 404
+
+        status = status_row[0]
+        if status == 'Cancelled':
+            return flask.jsonify({"mess": "Đơn hàng này đã bị hủy trước đó rồi!"}), 400
+
+        # Nếu trạng thái là Shipping hoặc Completed (đã bị trừ tồn kho trước đó) thì cộng lại
+        if status in ('Shipping', 'Completed'):
+            cursor.execute("SELECT ProductVariantID, Num FROM BillDetail WHERE BillID = ?", (id,))
             for val in cursor.fetchall():
-                cursor.execute("update ProductVariant set StockQuantity = StockQuantity + ? where ProductVariantID = ?", (val[1], val[0]))
-        cursor.execute("update Bill set Status = 'Cancelled' where BillID = ?", (id,))
+                cursor.execute("UPDATE ProductVariant SET StockQuantity = StockQuantity + ? WHERE ProductVariantID = ?",
+                               (val[1], val[0]))
+
+        cursor.execute("UPDATE Bill SET Status = 'Cancelled' WHERE BillID = ?", (id,))
         db_conn.commit()
-        return flask.jsonify({"mess": "Bill canceled successfully"}), 200
+        return flask.jsonify({"mess": "Đã hủy đơn hàng thành công"}), 200
+
     except Exception as e:
         db_conn.rollback()
         return flask.jsonify({"error": str(e)}), 500
