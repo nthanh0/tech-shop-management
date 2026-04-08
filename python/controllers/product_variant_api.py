@@ -145,14 +145,7 @@ def add_variant():
         Image = flask.request.json.get("Image")
         IsDeleted = flask.request.json.get("IsDeleted",0)
         Status = flask.request.json.get("Status")
-        des_dict = flask.request.json.copy()
-        
-        main_columns = ["ProductVariantID", "ProductID", "Color", "SellingPrice", "StockQuantity", "IsDeleted", "Image", "Status"]
-        
-        for col in main_columns:
-            des_dict.pop(col, None)
-
-        Description = flask.json.dumps(des_dict, ensure_ascii=False) if des_dict else None        
+        Description = flask.request.json.get("Description")        
         
         cursor.execute("SELECT ProductVariantID FROM ProductVariant WHERE ProductVariantID = ?", (ProductVariantID,))
         if cursor.fetchone():
@@ -186,15 +179,7 @@ def update_variant(ID):
         SellingPrice = flask.request.json.get("SellingPrice")
         Image = flask.request.json.get("Image")
         Status = flask.request.json.get("Status")
-        
-        des_dict = flask.request.json.copy()
-        
-        main_columns = ["ProductVariantID", "ProductID", "Color", "SellingPrice", "StockQuantity", "IsDeleted", "Image", "Status"]
-        
-        for col in main_columns:
-            des_dict.pop(col, None)
-
-        Description = flask.json.dumps(des_dict, ensure_ascii=False) if des_dict else None      
+        Description = flask.request.json.get("Description")
 
         query = """
                 UPDATE Productvariant SET ProductID = ?, Color = ?,
