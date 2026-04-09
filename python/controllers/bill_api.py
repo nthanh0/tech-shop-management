@@ -13,6 +13,8 @@ def get_all_bills():
             SELECT 
                 b.*, 
                 c.FullName AS CustomerName, 
+                c.Phone AS CustomerPhone,
+                c.Address AS CustomerAddress,
                 e.FullName AS EmployeeName
             FROM Bill b
             LEFT JOIN Customer c ON b.CustomerID = c.CustomerID
