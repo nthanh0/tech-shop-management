@@ -109,134 +109,105 @@ def get_bill_details(BillID):
         return flask.jsonify({"error": str(e)}), 500
 
 
-@bill_bp.route('/<id>/checkout', methods=['POST'])
-def checkout_bill(id):
-    try:
-        db_conn = get_connection()
-        cursor = db_conn.cursor()
+# ================= LỘ TRÌNH VẬN HÀNH ĐƠN HÀNG =================
 
-        # Lấy trạng thái hiện tại để tránh checkout 2 lần
-        cursor.execute("SELECT Status FROM Bill WHERE BillID = ?", (id,))
-        current_status = cursor.fetchone()
-        if not current_status or current_status[0] != 'Draft':
-            return flask.jsonify({"mess": "Chỉ có thể chốt đơn từ trạng thái Draft!"}), 400
-
-        # Kiểm tra và trừ tồn kho
-        cursor.execute("SELECT ProductVariantID, Num FROM BillDetail WHERE BillID = ?", (id,))
-        details = cursor.fetchall()
-
-        for detail in details:
-            variant_id = detail[0]
-            num_order = detail[1]
-            cursor.execute("SELECT StockQuantity FROM ProductVariant WHERE ProductVariantID = ?", (variant_id,))
-            current_stock = cursor.fetchone()[0]
-
-            if current_stock < num_order:
-                return flask.jsonify(
-                    {"mess": f"Sản phẩm {variant_id} không đủ số lượng tồn kho (Còn: {current_stock})"}), 400
-
-            cursor.execute("UPDATE ProductVariant SET StockQuantity = StockQuantity - ? WHERE ProductVariantID = ?",
-                           (num_order, variant_id))
-
-        # Chuyển trạng thái sang Đang giao (Shipping)
-        cursor.execute("UPDATE Bill SET Status = 'Shipping' WHERE BillID = ?", (id,))
-        db_conn.commit()
-        return flask.jsonify({"mess": "Chốt đơn thành công, hàng đang được giao!"}), 200
-
-    except Exception as e:
-        db_conn.rollback()
-        return flask.jsonify({"error": str(e)}), 500
-
-
-@bill_bp.route('/<id>/complete', methods=['POST'])
-def complete_bill(id):
+# 1. XÁC NHẬN ĐƠN (Pending -> Confirmed) - TRỪ KHO TẠI ĐÂY
+@bill_bp.route('/<id>/confirm', methods=['POST'])
+def confirm_bill(id):
     try:
         db_conn = get_connection()
         cursor = db_conn.cursor()
 
         cursor.execute("SELECT Status FROM Bill WHERE BillID = ?", (id,))
         status_row = cursor.fetchone()
+        if not status_row or status_row[
+            0] != 'Pending':  # Lưu ý: Khi tạo đơn mới ở /add, bạn nhớ đổi default Status thành 'Pending'
+            return flask.jsonify({"mess": "Chỉ có thể xác nhận đơn ở trạng thái Pending!"}), 400
 
-        if not status_row:
-            return flask.jsonify({"error": "Không tìm thấy hóa đơn"}), 404
+        # Kiểm tra và trừ tồn kho
+        cursor.execute("SELECT ProductVariantID, Num FROM BillDetail WHERE BillID = ?", (id,))
+        details = cursor.fetchall()
+        for detail in details:
+            variant_id, num_order = detail[0], detail[1]
+            cursor.execute("SELECT StockQuantity FROM ProductVariant WHERE ProductVariantID = ?", (variant_id,))
+            current_stock = cursor.fetchone()[0]
 
-        if status_row[0] != 'Shipping':
-            return flask.jsonify({"mess": "Chỉ có thể hoàn thành đơn đang ở trạng thái 'Đang giao' (Shipping)"}), 400
+            if current_stock < num_order:
+                return flask.jsonify({"mess": f"Sản phẩm {variant_id} không đủ tồn kho (Còn: {current_stock})"}), 400
 
-        cursor.execute("UPDATE Bill SET Status = 'Completed' WHERE BillID = ?", (id,))
+            cursor.execute("UPDATE ProductVariant SET StockQuantity = StockQuantity - ? WHERE ProductVariantID = ?",
+                           (num_order, variant_id))
+
+        cursor.execute("UPDATE Bill SET Status = 'Confirmed' WHERE BillID = ?", (id,))
         db_conn.commit()
-        return flask.jsonify({"mess": "Xác nhận đơn hàng đã giao thành công!"}), 200
-
+        return flask.jsonify({"mess": "Đã xác nhận đơn và trừ tồn kho thành công!"}), 200
     except Exception as e:
         db_conn.rollback()
         return flask.jsonify({"error": str(e)}), 500
 
 
+# 2. ĐANG ĐÓNG GÓI (Confirmed -> Packaging)
+@bill_bp.route('/<id>/packaging', methods=['POST'])
+def packaging_bill(id):
+    return update_bill_status(id, 'Confirmed', 'Packaging', "Đơn hàng đang được đóng gói!")
+
+
+# 3. ĐÓNG GÓI XONG (Packaging -> Packaged)
+@bill_bp.route('/<id>/packaged', methods=['POST'])
+def packaged_bill(id):
+    return update_bill_status(id, 'Packaging', 'Packaged', "Đã đóng gói xong, chờ bưu tá lấy hàng!")
+
+
+# 4. ĐANG GIAO HÀNG (Packaged -> In_transit)
+@bill_bp.route('/<id>/ship', methods=['POST'])
+def ship_bill(id):
+    return update_bill_status(id, 'Packaged', 'In_transit', "Đơn hàng đã được giao cho đơn vị vận chuyển!")
+
+
+# 5. ĐÃ GIAO HÀNG (In_transit -> Delivered) - Chờ đổi trả
 @bill_bp.route('/<id>/deliver', methods=['POST'])
 def deliver_bill(id):
+    return update_bill_status(id, 'In_transit', 'Delivered', "Khách đã nhận hàng. Bắt đầu thời gian chờ đổi trả.")
+
+
+# 6. HOÀN THÀNH (Delivered -> Completed)
+@bill_bp.route('/<id>/complete', methods=['POST'])
+def complete_bill(id):
+    return update_bill_status(id, 'Delivered', 'Completed', "Đơn hàng đã hoàn thành!")
+
+
+# Hàm Helper dùng chung để update các trạng thái không có logic phức tạp
+def update_bill_status(bill_id, current_status, new_status, success_msg):
     try:
         db_conn = get_connection()
         cursor = db_conn.cursor()
+        cursor.execute("SELECT Status FROM Bill WHERE BillID = ?", (bill_id,))
+        status_row = cursor.fetchone()
+        if not status_row or status_row[0] != current_status:
+            return flask.jsonify({"mess": f"Chỉ có thể chuyển sang '{new_status}' từ '{current_status}'"}), 400
 
-        cursor.execute("SELECT Status FROM Bill WHERE BillID = ?", (id,))
-        status = cursor.fetchone()
-
-        if not status or status[0] != 'Shipping':
-            return flask.jsonify({"mess": "Chỉ có thể đánh dấu 'Đã giao' cho đơn đang 'Shipping'"}), 400
-
-        # Chuyển sang trạng thái Đã giao (Delivered)
-        # Nếu database của bạn có cột DeliveryDate, hãy update luôn thời gian hiện tại vào đó để làm mốc tính 7 ngày
-        cursor.execute("UPDATE Bill SET Status = 'Delivered' WHERE BillID = ?", (id,))
+        cursor.execute("UPDATE Bill SET Status = ? WHERE BillID = ?", (new_status, bill_id))
         db_conn.commit()
-        return flask.jsonify({"mess": "Đơn hàng đã đến tay khách, bắt đầu tính thời gian đổi trả!"}), 200
+        return flask.jsonify({"mess": success_msg}), 200
     except Exception as e:
         db_conn.rollback()
         return flask.jsonify({"error": str(e)}), 500
 
 
-@bill_bp.route('/<id>/return', methods=['POST'])
-def return_bill(id):
-    try:
-        db_conn = get_connection()
-        cursor = db_conn.cursor()
-
-        cursor.execute("SELECT Status FROM Bill WHERE BillID = ?", (id,))
-        status = cursor.fetchone()
-
-        if not status or status[0] not in ('Delivered', 'Completed'):
-            return flask.jsonify({"mess": "Chỉ có thể trả hàng cho đơn đã giao hoặc hoàn thành."}), 400
-
-        # 1. Hoàn lại số lượng tồn kho
-        cursor.execute("SELECT ProductVariantID, Num FROM BillDetail WHERE BillID = ?", (id,))
-        for val in cursor.fetchall():
-            cursor.execute("UPDATE ProductVariant SET StockQuantity = StockQuantity + ? WHERE ProductVariantID = ?",
-                           (val[1], val[0]))
-
-        # 2. Cập nhật trạng thái thành Returned và Set TotalPrice = 0 (Trường hợp hoàn trả toàn bộ)
-        cursor.execute("UPDATE Bill SET Status = 'Returned', TotalPrice = 0 WHERE BillID = ?", (id,))
-        db_conn.commit()
-        return flask.jsonify({"mess": "Xử lý trả hàng thành công! Đã hoàn kho và trừ doanh thu."}), 200
-    except Exception as e:
-        db_conn.rollback()
-        return flask.jsonify({"error": str(e)}), 500
+# 7. HỦY ĐƠN VÀ HOÀN TỒN KHO
 @bill_bp.route('/<id>/cancel', methods=['POST'])
 def cancel_bill(id):
     try:
         db_conn = get_connection()
         cursor = db_conn.cursor()
-
         cursor.execute("SELECT Status FROM Bill WHERE BillID = ?", (id,))
-        status_row = cursor.fetchone()
+        status = cursor.fetchone()[0]
 
-        if not status_row:
-            return flask.jsonify({"error": "Không tìm thấy hóa đơn"}), 404
+        if status in ('Cancelled', 'Returned', 'Completed'):
+            return flask.jsonify({"mess": "Không thể hủy đơn hàng ở trạng thái này!"}), 400
 
-        status = status_row[0]
-        if status == 'Cancelled':
-            return flask.jsonify({"mess": "Đơn hàng này đã bị hủy trước đó rồi!"}), 400
-
-        # Nếu trạng thái là Shipping hoặc Completed (đã bị trừ tồn kho trước đó) thì cộng lại
-        if status in ('Shipping', 'Completed'):
+        # Nếu đã qua bước Confirmed (tức là đã bị trừ kho) -> Phải hoàn lại kho
+        if status not in ('Pending'):
             cursor.execute("SELECT ProductVariantID, Num FROM BillDetail WHERE BillID = ?", (id,))
             for val in cursor.fetchall():
                 cursor.execute("UPDATE ProductVariant SET StockQuantity = StockQuantity + ? WHERE ProductVariantID = ?",
@@ -245,11 +216,9 @@ def cancel_bill(id):
         cursor.execute("UPDATE Bill SET Status = 'Cancelled' WHERE BillID = ?", (id,))
         db_conn.commit()
         return flask.jsonify({"mess": "Đã hủy đơn hàng thành công"}), 200
-
     except Exception as e:
         db_conn.rollback()
         return flask.jsonify({"error": str(e)}), 500
-
 @bill_bp.route('/<id>/stock', methods = ['GET'])
 def check_stock(id):
     db_conn = get_connection()

@@ -15,12 +15,15 @@
             <span class="input-group-text bg-white" style="color: #6c757d;"><i class="fas fa-filter"></i></span>
             <select class="form-select border-start-0" aria-label="Filter" id="filterBill" onchange="executeBillSearch()">
                 <option value="All" selected>Tất cả trạng thái...</option>
-                <option value="Draft">Nháp (Draft)</option>
-                <option value="Shipping">Đang giao (Shipping)</option>
-                <option value="Delivered">Đã nhận hàng (Chờ đổi trả)</option>
+                <option value="Pending">Chờ xác nhận (Pending)</option>
+                <option value="Confirmed">Đã xác nhận (Confirmed)</option>
+                <option value="Packaging">Đang đóng gói (Packaging)</option>
+                <option value="Packaged">Đã đóng gói (Packaged)</option>
+                <option value="In_transit">Đang giao (In transit)</option>
+                <option value="Delivered">Đã nhận hàng (Delivered)</option>
                 <option value="Completed">Hoàn thành (Completed)</option>
-                <option value="Returned">Đã trả hàng (Returned)</option>
                 <option value="Cancelled">Đã hủy (Cancelled)</option>
+                <option value="Returned">Trả hàng (Returned)</option>
             </select>
         </div>
     </div>

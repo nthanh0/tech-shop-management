@@ -43,9 +43,9 @@ def login():
                     "EmployeeID": account[2]
                 }), 200
             else:
-                return flask.jsonify({"mess": "Sai mật khẩu"}), 401
+                return flask.jsonify({"mess": "Invalid password"}), 401
         else:
-            return flask.jsonify({"mess": "Tài khoản không tồn tại"}), 401
+            return flask.jsonify({"mess": "Account doesn't exit"}), 401
     except Exception as e:
         return flask.jsonify({"mess": str(e)}), 500
 

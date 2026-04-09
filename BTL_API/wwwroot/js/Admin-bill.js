@@ -50,28 +50,38 @@ function renderBillTable() {
         let badge = '';
         let actionButtons = `<button class="btn btn-sm btn-light text-primary me-1" title="Xem chi tiết" onclick="viewBillDetails('${bill.BillID}', ${bill.TotalPrice})"><i class="fas fa-eye"></i></button>`;
 
-      
-        if (bill.Status === 'Draft') {
-            badge = `<span class="badge bg-warning text-dark">Nháp</span>`;
-            actionButtons += `<button class="btn btn-sm btn-light text-primary me-1" title="Chốt & Giao hàng" onclick="checkoutBill('${bill.BillID}')"><i class="fas fa-truck"></i></button>`;
-            actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Hủy đơn" onclick="cancelBill('${bill.BillID}')"><i class="fas fa-times-circle"></i></button>`;
+        if (bill.Status === 'Pending') {
+            badge = `<span class="badge bg-warning text-dark">Chờ xác nhận</span>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-success me-1" title="Xác nhận & Trừ kho" onclick="updateBillState('${bill.BillID}', 'confirm')"><i class="fas fa-check"></i></button>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Hủy đơn" onclick="cancelBill('${bill.BillID}')"><i class="fas fa-times"></i></button>`;
         }
-        else if (bill.Status === 'Shipping') {
-            badge = `<span class="badge bg-info text-dark">Đang giao</span>`;
-            actionButtons += `<button class="btn btn-sm btn-light text-primary me-1" title="Khách đã nhận (Bắt đầu đếm ngược đổi trả)" onclick="deliverBill('${bill.BillID}')"><i class="fas fa-box-open"></i></button>`;
+        else if (bill.Status === 'Confirmed') {
+            badge = `<span class="badge bg-info text-dark">Đã xác nhận</span>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-primary me-1" title="Tiến hành đóng gói" onclick="updateBillState('${bill.BillID}', 'packaging')"><i class="fas fa-box-open"></i></button>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Hủy đơn" onclick="cancelBill('${bill.BillID}')"><i class="fas fa-times"></i></button>`;
+        }
+        else if (bill.Status === 'Packaging') {
+            badge = `<span class="badge bg-secondary">Đang đóng gói</span>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-primary me-1" title="Đã đóng gói xong" onclick="updateBillState('${bill.BillID}', 'packaged')"><i class="fas fa-box"></i></button>`;
+        }
+        else if (bill.Status === 'Packaged') {
+            badge = `<span class="badge bg-dark">Đã đóng gói</span>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-primary me-1" title="Giao cho vận chuyển" onclick="updateBillState('${bill.BillID}', 'ship')"><i class="fas fa-truck"></i></button>`;
+        }
+        else if (bill.Status === 'In_transit') {
+            badge = `<span class="badge bg-primary">Đang giao</span>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-success me-1" title="Khách đã nhận hàng" onclick="updateBillState('${bill.BillID}', 'deliver')"><i class="fas fa-home"></i></button>`;
         }
         else if (bill.Status === 'Delivered') {
-            badge = `<span class="badge bg-primary">Đã giao (Chờ chốt)</span>`;
-            actionButtons += `<button class="btn btn-sm btn-light text-success me-1" title="Khách chốt / Hết hạn đổi trả" onclick="completeBill('${bill.BillID}')"><i class="fas fa-check-double"></i></button>`;
-            actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Khách trả hàng & Hoàn tiền" onclick="returnBill('${bill.BillID}')"><i class="fas fa-exchange-alt"></i></button>`;
+            badge = `<span class="badge bg-success bg-opacity-75">Đã nhận hàng</span>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-success me-1" title="Chốt Hoàn thành" onclick="updateBillState('${bill.BillID}', 'complete')"><i class="fas fa-check-double"></i></button>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Khách trả hàng" onclick="returnBill('${bill.BillID}')"><i class="fas fa-exchange-alt"></i></button>`;
         }
         else if (bill.Status === 'Completed') {
             badge = `<span class="badge bg-success">Hoàn thành</span>`;
-            // Vẫn có thể cho ngoại lệ trả hàng nếu cần, tùy quy định cửa hàng
-            actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Ngoại lệ: Trả hàng" onclick="returnBill('${bill.BillID}')"><i class="fas fa-exchange-alt"></i></button>`;
         }
         else if (bill.Status === 'Returned') {
-            badge = `<span class="badge bg-dark">Trả hàng (Đã hoàn kho)</span>`;
+            badge = `<span class="badge bg-danger">Trả hàng</span>`;
         }
         else if (bill.Status === 'Cancelled') {
             badge = `<span class="badge text-bg-danger">Đã hủy</span>`;
@@ -135,53 +145,32 @@ function viewBillDetails(billId, totalPrice) {
         .catch(err => alert("Lỗi khi lấy chi tiết đơn hàng!"));
 }
 
-// DUYỆT ĐƠN SANG TRẠNG THÁI ĐANG GIAO
-function checkoutBill(billId) {
-    if (!confirm(`Xác nhận chốt đơn [${billId}]? Thao tác này sẽ TRỪ TỒN KHO và chuyển trạng thái sang Đang giao.`)) return;
+// Hàm chung xử lý chuyển trạng thái (Confirm, Packaging, Packaged, Ship, Deliver, Complete)
+function updateBillState(billId, action) {
+    let actionNames = {
+        'confirm': 'Xác nhận đơn và Trừ kho',
+        'packaging': 'Tiến hành đóng gói',
+        'packaged': 'Xác nhận đã đóng gói xong',
+        'ship': 'Giao hàng cho đơn vị vận chuyển',
+        'deliver': 'Xác nhận khách đã nhận được hàng',
+        'complete': 'Chốt hoàn thành đơn hàng'
+    };
 
-    fetch(`http://127.0.0.1:5000/bills/${billId}/checkout`, { method: 'POST' })
+    if (!confirm(`Bạn muốn [${actionNames[action]}] cho đơn hàng ${billId}?`)) return;
+
+    fetch(`http://127.0.0.1:5000/bills/${billId}/${action}`, { method: 'POST' })
         .then(res => res.json())
         .then(result => {
-            if (result.mess && result.mess.includes("không đủ số lượng")) {
-                alert("Thất bại: " + result.mess);
-            } else if (result.error) {
-                alert("Lỗi Server: " + result.error);
-            } else {
-                alert("Đã chốt đơn và bắt đầu giao hàng!");
+            if (result.error) alert("Lỗi Server: " + result.error);
+            else if (result.mess && result.mess.includes("không đủ")) alert("Thất bại: " + result.mess);
+            else {
+                alert(result.mess || "Cập nhật thành công!");
                 executeBillSearch();
             }
         });
 }
 
-// XÁC NHẬN HOÀN THÀNH (HÀM MỚI)
-function completeBill(billId) {
-    if (!confirm(`Xác nhận khách hàng đã nhận được đơn [${billId}] thành công?`)) return;
-
-    fetch(`http://127.0.0.1:5000/bills/${billId}/complete`, { method: 'POST' })
-        .then(res => res.json())
-        .then(result => {
-            if (result.error) {
-                alert("Lỗi Server: " + result.error);
-            } else if (result.mess && result.mess.includes("Chỉ có thể")) {
-                alert("Lỗi: " + result.mess);
-            } else {
-                alert("Xác nhận hoàn thành đơn hàng!");
-                executeBillSearch();
-            }
-        })
-        .catch(err => alert("Lỗi kết nối: " + err.message));
-}
-
-function deliverBill(billId) {
-    if (!confirm(`Xác nhận bưu tá đã giao thành công đơn [${billId}]? Đơn sẽ chuyển sang trạng thái chờ đổi trả.`)) return;
-    fetch(`http://127.0.0.1:5000/bills/${billId}/deliver`, { method: 'POST' })
-        .then(res => res.json())
-        .then(result => {
-            if (result.error) alert("Lỗi: " + result.error);
-            else { alert(result.mess); executeBillSearch(); }
-        });
-}
-
+// (Giữ lại hàm cancelBill và returnBill của bạn vì 2 hàm này có cảnh báo đặc thù về việc hoàn tồn kho)
 function returnBill(billId) {
     if (!confirm(`XÁC NHẬN TRẢ HÀNG cho đơn [${billId}]? Hệ thống sẽ CỘNG LẠI TỒN KHO và HỦY DOANH THU đơn này.`)) return;
     fetch(`http://127.0.0.1:5000/bills/${billId}/return`, { method: 'POST' })
