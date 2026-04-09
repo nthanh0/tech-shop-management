@@ -1,4 +1,4 @@
-﻿let currentBillData = [];
+let currentBillData = [];
 let currentBillPage = 1;
 const billRowsPerPage = 5;
 
@@ -75,7 +75,7 @@ function renderBillTable() {
         else if (bill.Status === 'Delivered') {
             badge = `<span class="badge bg-success bg-opacity-75">Đã nhận hàng</span>`;
             actionButtons += `<button class="btn btn-sm btn-light text-success me-1" title="Chốt Hoàn thành" onclick="updateBillState('${bill.BillID}', 'complete')"><i class="fas fa-check-double"></i></button>`;
-            actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Khách trả hàng" onclick="returnBill('${bill.BillID}')"><i class="fas fa-exchange-alt"></i></button>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Hủy đơn (hoàn kho)" onclick="cancelBill('${bill.BillID}')"><i class="fas fa-times"></i></button>`;
         }
         else if (bill.Status === 'Completed') {
             badge = `<span class="badge bg-success">Hoàn thành</span>`;
@@ -167,17 +167,6 @@ function updateBillState(billId, action) {
                 alert(result.mess || "Cập nhật thành công!");
                 executeBillSearch();
             }
-        });
-}
-
-// (Giữ lại hàm cancelBill và returnBill của bạn vì 2 hàm này có cảnh báo đặc thù về việc hoàn tồn kho)
-function returnBill(billId) {
-    if (!confirm(`XÁC NHẬN TRẢ HÀNG cho đơn [${billId}]? Hệ thống sẽ CỘNG LẠI TỒN KHO và HỦY DOANH THU đơn này.`)) return;
-    fetch(`http://127.0.0.1:5000/bills/${billId}/return`, { method: 'POST' })
-        .then(res => res.json())
-        .then(result => {
-            if (result.error) alert("Lỗi: " + result.error);
-            else { alert(result.mess); executeBillSearch(); }
         });
 }
 
@@ -310,7 +299,7 @@ async function submitFullBill() {
                 CustomerID: customerId,
                 EmployeeID: employeeId,
                 PaymentMethod: payMethod,
-                Status: 'Draft',
+                Status: 'Pending',
                 TotalPrice: 0
             })
         });
