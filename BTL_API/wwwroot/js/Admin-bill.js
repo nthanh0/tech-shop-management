@@ -70,18 +70,10 @@ function renderBillTable() {
         }
         else if (bill.Status === 'In_transit') {
             badge = `<span class="badge bg-primary">Đang giao</span>`;
-            actionButtons += `<button class="btn btn-sm btn-light text-success me-1" title="Khách đã nhận hàng" onclick="updateBillState('${bill.BillID}', 'deliver')"><i class="fas fa-home"></i></button>`;
-        }
-        else if (bill.Status === 'Delivered') {
-            badge = `<span class="badge bg-success bg-opacity-75">Đã nhận hàng</span>`;
-            actionButtons += `<button class="btn btn-sm btn-light text-success me-1" title="Chốt Hoàn thành" onclick="updateBillState('${bill.BillID}', 'complete')"><i class="fas fa-check-double"></i></button>`;
-            actionButtons += `<button class="btn btn-sm btn-light text-danger" title="Hủy đơn (hoàn kho)" onclick="cancelBill('${bill.BillID}')"><i class="fas fa-times"></i></button>`;
+            actionButtons += `<button class="btn btn-sm btn-light text-success me-1" title="Xác nhận giao hàng thành công (Hoàn thành)" onclick="updateBillState('${bill.BillID}', 'complete')"><i class="fas fa-check-double"></i></button>`;
         }
         else if (bill.Status === 'Completed') {
             badge = `<span class="badge bg-success">Hoàn thành</span>`;
-        }
-        else if (bill.Status === 'Returned') {
-            badge = `<span class="badge bg-danger">Trả hàng</span>`;
         }
         else if (bill.Status === 'Cancelled') {
             badge = `<span class="badge text-bg-danger">Đã hủy</span>`;
@@ -152,8 +144,7 @@ function updateBillState(billId, action) {
         'packaging': 'Tiến hành đóng gói',
         'packaged': 'Xác nhận đã đóng gói xong',
         'ship': 'Giao hàng cho đơn vị vận chuyển',
-        'deliver': 'Xác nhận khách đã nhận được hàng',
-        'complete': 'Chốt hoàn thành đơn hàng'
+        'complete': 'Xác nhận giao hàng thành công (Hoàn thành đơn)'
     };
 
     if (!confirm(`Bạn muốn [${actionNames[action]}] cho đơn hàng ${billId}?`)) return;
