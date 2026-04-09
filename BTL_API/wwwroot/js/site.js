@@ -783,7 +783,7 @@ async function loadProductDetail(productId) {
 
         // Add to cart
         document.getElementById('btnAddCart').addEventListener('click', () => {
-            const activeBtn = document.querySelector('.variant-option.active');
+            const activeBtn = document.querySelector('#variantOptions .variant-option.active');
             const idx = activeBtn ? parseInt(activeBtn.dataset.idx) : 0;
             const v = window._detailVariants[idx];
             if (!v || v.StockQuantity <= 0) return;
