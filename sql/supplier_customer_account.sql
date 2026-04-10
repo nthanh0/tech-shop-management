@@ -38,10 +38,42 @@ INSERT INTO Customer (CustomerID, FullName, Phone, Email, Address) VALUES
 ('CUS14', N'Phan Thanh Bình', '0912999119', 'binh.pt@gmail.com', N'Tây Hồ, Hà Nội'),
 ('CUS15', N'Ngô Bảo Châu', '0913888220', 'chau.ngo@gmail.com', N'Hai Bà Trưng, Hà Nội');
 
--- Tài khoản
+-- ==============================================
+-- 1. Tài khoản cho 15 Nhân viên (ACC01 - ACC15)
+-- ==============================================
 INSERT INTO Account (AccountID, Username, Password, Role, IsActive, EmployeeID, CustomerID) VALUES 
 ('ACC01', 'admin', '123', 'Admin', 1, 'EMP01', NULL),
 ('ACC02', 'nhanvien_b', '123', 'Sales', 1, 'EMP02', NULL),
-('ACC03', 'khokho_c', '123', 'Inventory', 1, 'EMP03', NULL),
-('ACC04', 'khachhang_duong', '123', 'Customer', 1, NULL, 'CUS01'),
-('ACC05', 'khachhang_linh', '123', 'Customer', 1, NULL, 'CUS02');
+('ACC03', 'thukho_c', '123', 'Inventory', 1, 'EMP03', NULL),
+('ACC04', 'thungan_d', '123', 'Sales', 1, 'EMP04', NULL),
+('ACC05', 'kythuat_e', '123', 'Technician', 1, 'EMP05', NULL),
+('ACC06', 'nhanvien_binh', '123', 'Sales', 1, 'EMP06', NULL),
+('ACC07', 'thungan_hoa', '123', 'Sales', 1, 'EMP07', NULL),
+('ACC08', 'thukho_nam', '123', 'Inventory', 1, 'EMP08', NULL),
+('ACC09', 'kythuat_tuan', '123', 'Technician', 1, 'EMP09', NULL),
+('ACC10', 'cskh_thao', '123', 'Sales', 1, 'EMP10', NULL),
+('ACC11', 'nhanvien_long', '123', 'Sales', 1, 'EMP11', NULL),
+('ACC12', 'marketing_anh', '123', 'Marketing', 1, 'EMP12', NULL),
+('ACC13', 'ketoan_chi', '123', 'Accountant', 1, 'EMP13', NULL),
+('ACC14', 'baove_dung', '123', 'Guard', 1, 'EMP14', NULL),
+('ACC15', 'admin_binh', '123', 'Admin', 1, 'EMP15', NULL);
+
+-- ==============================================
+-- 2. Tài khoản cho 15 Khách hàng (ACC16 - ACC30)
+-- ==============================================
+INSERT INTO Account (AccountID, Username, Password, Role, IsActive, EmployeeID, CustomerID) VALUES 
+('ACC16', 'khachhang_duong', '123', 'Customer', 1, NULL, 'CUS01'),
+('ACC17', 'khachhang_linh', '123', 'Customer', 1, NULL, 'CUS02'),
+('ACC18', 'khachhang_huy', '123', 'Customer', 1, NULL, 'CUS03'),
+('ACC19', 'khachhang_xuan', '123', 'Customer', 1, NULL, 'CUS04'),
+('ACC20', 'khachhang_phat', '123', 'Customer', 1, NULL, 'CUS05'),
+('ACC21', 'khachhang_nam', '123', 'Customer', 1, NULL, 'CUS06'),
+('ACC22', 'khachhang_ha', '123', 'Customer', 1, NULL, 'CUS07'),
+('ACC23', 'khachhang_triet', '123', 'Customer', 1, NULL, 'CUS08'),
+('ACC24', 'khachhang_thuyduong', '123', 'Customer', 1, NULL, 'CUS09'),
+('ACC25', 'khachhang_trung', '123', 'Customer', 1, NULL, 'CUS10'),
+('ACC26', 'khachhang_phuonganh', '123', 'Customer', 1, NULL, 'CUS11'),
+('ACC27', 'khachhang_kimchi', '123', 'Customer', 1, NULL, 'CUS12'),
+('ACC28', 'khachhang_vinh', '123', 'Customer', 1, NULL, 'CUS13'),
+('ACC29', 'khachhang_binh', '123', 'Customer', 1, NULL, 'CUS14'),
+('ACC30', 'khachhang_chau', '123', 'Customer', 1, NULL, 'CUS15');
